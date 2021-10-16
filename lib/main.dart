@@ -7,7 +7,7 @@ import 'package:test_game/game/game.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Flame.util.fullScreen();
-  await Flame.util.setLandscape();
+  await Flame.util.setPortrait();
   runApp(MyApp());
 }
 

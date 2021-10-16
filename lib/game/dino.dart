@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/components/animation_component.dart';
 import 'package:flame/spritesheet.dart';
+import 'package:flutter/material.dart';
 
 const double groundheight = 32;
 const double dinoTopBottomSpacing = 10;
@@ -19,7 +20,7 @@ class Dino extends AnimationComponent{
     final spritesSheet =
     SpriteSheet(imageName: 'DinoSprites - tard.png', textureWidth: 24, textureHeight: 24, columns: 24, rows: 1);
 
-    final idleAnim = spritesSheet.createAnimation(0, from: 0, to: 3, stepTime: 0.1);
+    // final idleAnim = spritesSheet.createAnimation(0, from: 0, to: 3, stepTime: 0.1);
     final runAnim = spritesSheet.createAnimation(0, from: 4, to: 10, stepTime: 0.1);
 
     this.animation = runAnim;
@@ -27,30 +28,40 @@ class Dino extends AnimationComponent{
   }
 
   @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+  }
+
+  @override
   void update(double t) {
     super.update(t);
 
-    speedY += GRAVITY * t;
-    speedX += GRAVITY * t;
+    // print('UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
 
-    print('Update=========  ${speedY} --------------   ${y}');
+    speedY += GRAVITY * t;
 
     y += this.speedY * t;
 
-    x += speedX * t;
+    if(isJump){
+      speedX += 10 * t;
+      x += this.speedX * t;
+    }
 
-    print('AFTER=========  ${speedY} --------------   ${y}');
+    print('Update=========  ${speedY} --------------   ${y}----------------------- ${t}');
+
+    // x += speedX * t;
+
+    // print('AFTER=========  ${speedY} --------------   ${y}');
 
     if(isOnGround()){
       y = yMax;
       speedY = 0.0;
-
-      speedX = 0.0;
-      x = xMax;
+      isJump = false;
 
     }
 
   }
+
 
   bool isOnGround(){
     return y >= yMax;
@@ -60,19 +71,24 @@ class Dino extends AnimationComponent{
   void resize(Size size) {
     super.resize(size);
 
+
     this.height = this.width = size.width / 10;
     this.x = this.width;
     this.y = size.height - groundheight - this.height + dinoTopBottomSpacing;
 
-    xMax = x;
+    xMax = this.width;
     this.yMax = this.y;
 
-  }
+    print('RESIZEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE     ${x} =====   ${y} ====   ${size.height}');
 
+
+  }
+bool isJump = false;
   void jump() {
     if(isOnGround()){
-      this.speedY = -600;
-      this.speedX = 20;
+      isJump = true;
+      this.speedY = -300;
+      this.speedX = 100;
     }
   }
 
