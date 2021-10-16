@@ -10,7 +10,9 @@ const double GRAVITY = 1000;
 class Dino extends AnimationComponent{
 
   double speedY = 0.0;
+  double speedX = 0.0;
   double yMax = 0.0;
+  double xMax = 0.0;
 
   Dino() : super.empty(){
 
@@ -28,19 +30,24 @@ class Dino extends AnimationComponent{
   void update(double t) {
     super.update(t);
 
-
     speedY += GRAVITY * t;
-
+    speedX += GRAVITY * t;
 
     print('Update=========  ${speedY} --------------   ${y}');
 
     y += this.speedY * t;
+
+    x += speedX * t;
 
     print('AFTER=========  ${speedY} --------------   ${y}');
 
     if(isOnGround()){
       y = yMax;
       speedY = 0.0;
+
+      speedX = 0.0;
+      x = xMax;
+
     }
 
   }
@@ -57,6 +64,7 @@ class Dino extends AnimationComponent{
     this.x = this.width;
     this.y = size.height - groundheight - this.height + dinoTopBottomSpacing;
 
+    xMax = x;
     this.yMax = this.y;
 
   }
@@ -64,6 +72,7 @@ class Dino extends AnimationComponent{
   void jump() {
     if(isOnGround()){
       this.speedY = -600;
+      this.speedX = 20;
     }
   }
 

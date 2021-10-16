@@ -19,7 +19,7 @@ class DinoGame extends BaseGame with TapDetector{
       ParallaxImage('plx-4.png'),
       ParallaxImage('plx-5.png'),
       ParallaxImage('plx-6.png', fill: LayerFill.none),
-    ], baseSpeed: Offset(100, 0));
+    ], baseSpeed: Offset(0, 0));
 
     add(_parallaxComponent);
 
