@@ -6,90 +6,103 @@ import 'package:flutter/material.dart';
 
 const double groundheight = 32;
 const double dinoTopBottomSpacing = 10;
-const double GRAVITY = 1000;
+const double GRAVITY_Y = 1000;
+const double GRAVITY_X = 10;
+const double maxTime = 1500;
 
-class Dino extends AnimationComponent{
-
+class Dino extends AnimationComponent {
   double speedY = 0.0;
   double speedX = 0.0;
   double yMax = 0.0;
   double xMax = 0.0;
 
-  Dino() : super.empty(){
+  bool isJump = false;
+  int startTime = 0;
+  int timeDelta = 0;
+  double distanceTarget = 0;
 
-    final spritesSheet =
-    SpriteSheet(imageName: 'DinoSprites - tard.png', textureWidth: 24, textureHeight: 24, columns: 24, rows: 1);
+  Size _size;
 
-    // final idleAnim = spritesSheet.createAnimation(0, from: 0, to: 3, stepTime: 0.1);
-    final runAnim = spritesSheet.createAnimation(0, from: 4, to: 10, stepTime: 0.1);
+  Dino() : super.empty() {
+    final spritesSheet = SpriteSheet(
+        imageName: 'DinoSprites - tard.png',
+        textureWidth: 24,
+        textureHeight: 24,
+        columns: 24,
+        rows: 1);
+
+    final runAnim =
+        spritesSheet.createAnimation(0, from: 4, to: 10, stepTime: 0.1);
 
     this.animation = runAnim;
-
   }
 
   @override
   void render(Canvas canvas) {
     super.render(canvas);
+
+    // canvas.drawRect(Rect.fromLTWH(0, 0, 411, 761), Paint()..color = Colors.red);
   }
 
   @override
   void update(double t) {
     super.update(t);
 
-    // print('UPDATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
-
-    speedY += GRAVITY * t;
-
+    speedY += GRAVITY_Y * t;
     y += this.speedY * t;
 
-    if(isJump){
-      speedX += 10 * t;
-      x += this.speedX * t;
+    if (isJump) {
+      x += distanceTarget * t;
     }
 
-    print('Update=========  ${speedY} --------------   ${y}----------------------- ${t}');
-
-    // x += speedX * t;
-
-    // print('AFTER=========  ${speedY} --------------   ${y}');
-
-    if(isOnGround()){
+    if (isOnGround()) {
       y = yMax;
       speedY = 0.0;
       isJump = false;
 
-    }
+      speedX = 0.0;
 
+    }
   }
 
-
-  bool isOnGround(){
+  bool isOnGround() {
     return y >= yMax;
   }
 
   @override
   void resize(Size size) {
     super.resize(size);
-
+    _size = size;
 
     this.height = this.width = size.width / 10;
     this.x = this.width;
-    this.y = size.height - groundheight - this.height + dinoTopBottomSpacing;
+    this.y = size.height / 2 /*- groundheight - this.height + dinoTopBottomSpacing*/;
 
     xMax = this.width;
     this.yMax = this.y;
 
-    print('RESIZEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE     ${x} =====   ${y} ====   ${size.height}');
-
-
   }
-bool isJump = false;
+
   void jump() {
-    if(isOnGround()){
+    if (isOnGround()) {
       isJump = true;
-      this.speedY = -300;
-      this.speedX = 100;
+      this.speedY = -400;
     }
   }
 
+  //maxTime(milisecond) <=> jum over screen <=> screenSize.width
+  //x(milisecond) =  y (length) >> y = x * screenSize.width / maxTime
+
+  void onTapDown(TapDownDetails details) {
+    startTime = DateTime.now().millisecondsSinceEpoch;
+  }
+
+  void onTapUp(TapUpDetails details) {
+    int endTime = DateTime.now().millisecondsSinceEpoch;
+
+    timeDelta = endTime - startTime;
+    distanceTarget = ((_size.width - width) * timeDelta) / maxTime;
+
+    jump();
+  }
 }
