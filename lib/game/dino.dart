@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flame/components/animation_component.dart';
+import 'package:flame/components/component.dart';
 import 'package:flame/spritesheet.dart';
 import 'package:flutter/material.dart';
 
@@ -22,18 +23,26 @@ class Dino extends AnimationComponent {
   double distanceTarget = 0;
 
   Size _size;
+  SpriteSheet spriteSheet;
+  dynamic runAnim;
+  dynamic hitAnim;
 
   Dino() : super.empty() {
-    final spritesSheet = SpriteSheet(
-        imageName: 'DinoSprites - tard.png',
-        textureWidth: 24,
-        textureHeight: 24,
-        columns: 24,
-        rows: 1);
+    spriteSheet =
+        SpriteSheet(imageName: 'DinoSprites - tard.png', textureWidth: 24, textureHeight: 24, columns: 24, rows: 1);
 
-    final runAnim =
-        spritesSheet.createAnimation(0, from: 4, to: 10, stepTime: 0.1);
+    runAnim = spriteSheet.createAnimation(0, from: 4, to: 10, stepTime: 0.1);
+    hitAnim = spriteSheet.createAnimation(0, from: 11, to: 18, stepTime: 0.1);
 
+    this.animation = runAnim;
+  }
+
+  void hit() {
+    // final hitAnim = spriteSheet.createAnimation(0, from: 11, to: 18, stepTime: 0.1);
+    this.animation = hitAnim;
+  }
+  void run() {
+    // final runAnim = spriteSheet.createAnimation(0, from: 4, to: 10, stepTime: 0.1);
     this.animation = runAnim;
   }
 
@@ -61,7 +70,6 @@ class Dino extends AnimationComponent {
       isJump = false;
 
       speedX = 0.0;
-
     }
   }
 
@@ -80,7 +88,6 @@ class Dino extends AnimationComponent {
 
     xMax = this.width;
     this.yMax = this.y;
-
   }
 
   void jump() {
@@ -105,4 +112,6 @@ class Dino extends AnimationComponent {
 
     jump();
   }
+
+
 }

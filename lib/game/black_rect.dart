@@ -1,33 +1,33 @@
 import 'dart:math';
 import 'dart:ui';
+import 'package:flame/components/animation_component.dart';
 import 'package:flame/components/component.dart';
-import 'package:flame/components/mixins/has_game_ref.dart';
+import 'package:flame/sprite.dart';
+import 'package:flame/spritesheet.dart';
 import 'package:flutter/material.dart';
-import 'package:test_game/game/game.dart';
 
-class BlackRect extends Component with HasGameRef<DinoGame>{
+class BlackRect {
   Size _size;
-  Random _random;
 
-  BlackRect();
-
-  @override
-  void render(Canvas canvas) {
-    print('BlackRect======${_size.width}');
-
-    canvas.drawRect(Rect.fromLTWH(_size.width/10, _size.height/2 + 24 + 10, _size.width / 10, _size.height/2), Paint()..color = Colors.green);
+  BlackRect(){
+    var player = SpriteComponent.square(64, 'rect_green');
   }
 
-  @override
   void update(double t) {
+    // super.update(t);
   }
 
-  @override
-  void resize(Size size) {
-    super.resize(size);
+  void render(Canvas canvas) {
+    // super.render(canvas);
 
+// canvas.drawRect(Rect.fromLTWH(0, 0, 100, 100), Paint()..color = Colors.green);
+  }
+
+  void resize(Size size) {
     _size = size;
 
+    // this.height = this.width = size.width / 10;
+    // this.x = this.width;
+    // this.y = size.height / 2 /*- groundheight - this.height + dinoTopBottomSpacing*/;
   }
-
 }
