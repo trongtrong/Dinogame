@@ -89,35 +89,39 @@ class DinoGame extends BaseGame with TapDetector {
       //check vi tri dino tai y Min và kiểm tra xem vị trí của dino có lớn hơn cpn.x + 50(chiều rộng của cpn)
 
 
-      // if (_dino.x < _spriteCpnSecond.x || _dino.x + 24 > _spriteCpnSecond.x + 50) {
-      //   print('1111111111111111111111111111111111111');
-      // }
-      //
-      // if (_dino.x >= _spriteCpnSecond.x && _dino.x + 24 <= _spriteCpnSecond.x + 50) {
-      //   print('22222222222222222222222222222222222222');
-      //   isMove = true;
-      // }
-      //
+      if (_dino.x < _spriteCpnSecond.x || _dino.x + 24 > _spriteCpnSecond.x + 50) {
+        print('1111111111111111111111111111111111111');
+      }
+
+      if (_dino.x >= _spriteCpnSecond.x && _dino.x + 24 <= _spriteCpnSecond.x + 50 && !isMove) {
+        print('22222222222222222222222222222222222222');
+        isMove = true;
+      }
+
       // print('Dino    x ==  ${_dino.x}====_spriteCpnSecond.x ==  ${_spriteCpnSecond.x}========_dino.x + 24 =  ${_dino.x + 24}'
       //     '=================_spriteCpnSecond.x + 50 == ${_spriteCpnSecond.x + 50}');
 
 
+      if(isMove){
+        _spriteCpnFirst.x -= 10 * 50 * t;
 
-      _spriteCpnFirst.x -= 10 * 50 * t;
+        if (_spriteCpnFirst.x < -(_size.width / 2)) {
+          _spriteCpnSecond.x = max(_spriteCpnSecond.x - (10 * 50 * t), xMin);
+          _dino.x = max(_spriteCpnSecond.x - (10 * 50 * t), xMin);
 
-      if (_spriteCpnFirst.x < -(_size.width / 2)) {
-        _spriteCpnSecond.x = max(_spriteCpnSecond.x - (10 * 50 * t), xMin);
-        _dino.x = max(_spriteCpnSecond.x - (10 * 50 * t), xMin);
+          if (_spriteCpnSecond.x == xMin) {
+            _spriteCpnFirst.x = xMin;
 
-        if (_spriteCpnSecond.x == xMin) {
-          _spriteCpnFirst.x = xMin;
+            int randomX = (size.width / 10).toInt() +
+                50 +
+                _random.nextInt(size.width.toInt() - 50 - (size.width / 10 + 50).toInt());
+            _spriteCpnSecond.x = randomX.toDouble();
 
-          int randomX = (size.width / 10).toInt() +
-              50 +
-              _random.nextInt(size.width.toInt() - 50 - (size.width / 10 + 50).toInt());
-          _spriteCpnSecond.x = randomX.toDouble();
+            isMove = false;
+          }
         }
       }
+
     }
   }
 
