@@ -15,6 +15,7 @@ import 'package:test_game/game/black_rect.dart';
 import 'package:test_game/game/dino.dart';
 import 'dart:math';
 
+const widthRect = 50;
 class DinoGame extends BaseGame with TapDetector {
   Dino _dino;
   BlackRect _blackRect;
@@ -54,8 +55,7 @@ class DinoGame extends BaseGame with TapDetector {
     add(_spriteCpnSecond);
 
     score = 0;
-    _scoreText = TextComponent(score.toString(),
-        config: TextConfig(color: Colors.white, fontSize: 40));
+    _scoreText = TextComponent(score.toString(), config: TextConfig(color: Colors.white, fontSize: 40));
     add(_scoreText);
   }
 
@@ -65,61 +65,60 @@ class DinoGame extends BaseGame with TapDetector {
 
     _size = size;
 
-    xMin = _size.width/10;
+    xMin = _size.width / 10;
 
     _scoreText.setByPosition(Position(size.width / 2 - _scoreText.width, 100));
 
     _spriteCpnFirst.x = size.width / 10;
     _spriteCpnFirst.y = size.height / 2 + size.width / 10 - 20;
 
-    int randomX = (size.width / 10).toInt() +
-        50 +
-        _random
-            .nextInt(size.width.toInt() - 50 - (size.width / 10 + 50).toInt());
+    int randomX =
+        (size.width / 10).toInt() + 50 + _random.nextInt(size.width.toInt() - 50 - (size.width / 10 + 50).toInt());
     _spriteCpnSecond.x = randomX.toDouble();
 
-    print('_spriteCpnSecond.x ==   ${_spriteCpnSecond.x}');
-
     _spriteCpnSecond.y = size.height / 2 + size.width / 10 - 20;
+
   }
 
+  bool isMove = false;
   @override
   void update(double t) {
     super.update(t);
 
-    double x1 = components.whereType<SpriteComponent>().first.x;
+    if (_dino.isOnGround() && _dino.x > _spriteCpnFirst.x + 50) {
+      //check vi tri dino tai y Min và kiểm tra xem vị trí của dino có lớn hơn cpn.x + 50(chiều rộng của cpn)
 
-    if (_dino.isOnGround() && _dino.x >= x1 + 50) {
-      components.whereType<SpriteComponent>().first.x -= 10 * 50 * t;
 
-      if (components.whereType<SpriteComponent>().first.x < -(_size.width)) {
-        print('Dino > x1 cordinate=====================');
-        _spriteCpnSecond.x = max(_spriteCpnSecond.x -  (10 * 50 * t), xMin);
+      // if (_dino.x < _spriteCpnSecond.x || _dino.x + 24 > _spriteCpnSecond.x + 50) {
+      //   print('1111111111111111111111111111111111111');
+      // }
+      //
+      // if (_dino.x >= _spriteCpnSecond.x && _dino.x + 24 <= _spriteCpnSecond.x + 50) {
+      //   print('22222222222222222222222222222222222222');
+      //   isMove = true;
+      // }
+      //
+      // print('Dino    x ==  ${_dino.x}====_spriteCpnSecond.x ==  ${_spriteCpnSecond.x}========_dino.x + 24 =  ${_dino.x + 24}'
+      //     '=================_spriteCpnSecond.x + 50 == ${_spriteCpnSecond.x + 50}');
 
-        // if(isPaddingMin(_spriteCpnSecond.x)){
-        //   print('xMin====================== ${xMin}=============${_spriteCpnSecond.x}');
-        //   _spriteCpnSecond.x = xMin;
-        // }
 
+
+      _spriteCpnFirst.x -= 10 * 50 * t;
+
+      if (_spriteCpnFirst.x < -(_size.width / 2)) {
+        _spriteCpnSecond.x = max(_spriteCpnSecond.x - (10 * 50 * t), xMin);
+        _dino.x = max(_spriteCpnSecond.x - (10 * 50 * t), xMin);
+
+        if (_spriteCpnSecond.x == xMin) {
+          _spriteCpnFirst.x = xMin;
+
+          int randomX = (size.width / 10).toInt() +
+              50 +
+              _random.nextInt(size.width.toInt() - 50 - (size.width / 10 + 50).toInt());
+          _spriteCpnSecond.x = randomX.toDouble();
+        }
       }
-
     }
-
-    // components.whereType<SpriteComponent>().forEach((element) {
-    //   if (_dino.isOnGround()) {
-    //     if (_dino.x >= element.x && _dino.x + 24 <= element.x + 50) {
-    //       print('components distance================');
-    //       // _parallaxComponent.baseSpeed = Offset(20,0);
-    //
-    //     } else {
-    //       print('components ${_dino.x} ============ ${element.x}================${_dino.x + 24}================${element.x + 50}');
-    //     }
-    //   }
-    // });
-  }
-
-  bool isPaddingMin(double x){
-    return x >= xMin;
   }
 
   @override

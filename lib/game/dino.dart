@@ -41,6 +41,7 @@ class Dino extends AnimationComponent {
     // final hitAnim = spriteSheet.createAnimation(0, from: 11, to: 18, stepTime: 0.1);
     this.animation = hitAnim;
   }
+
   void run() {
     // final runAnim = spriteSheet.createAnimation(0, from: 4, to: 10, stepTime: 0.1);
     this.animation = runAnim;
@@ -57,10 +58,10 @@ class Dino extends AnimationComponent {
   void update(double t) {
     super.update(t);
 
-    speedY += GRAVITY_Y * t;
-    y += this.speedY * t;
-
     if (isJump) {
+      speedY += GRAVITY_Y * t;
+      y += this.speedY * t;
+
       x += distanceTarget * t;
     }
 
@@ -97,6 +98,10 @@ class Dino extends AnimationComponent {
     }
   }
 
+  void drop() {
+    this.speedY = -400;
+  }
+
   //maxTime(milisecond) <=> jum over screen <=> screenSize.width
   //x(milisecond) =  y (length) >> y = x * screenSize.width / maxTime
 
@@ -112,6 +117,4 @@ class Dino extends AnimationComponent {
 
     jump();
   }
-
-
 }
